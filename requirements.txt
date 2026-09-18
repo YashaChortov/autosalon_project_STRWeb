@@ -3,3 +3,8 @@ djangorestframework
 django-bootstrap4
 
 requests~=2.32.4
+
+# Для аналитики
+matplotlib
+numpy
+pandas

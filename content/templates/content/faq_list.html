@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Словарь терминов</h3>
+
+<h2>Заметки</h2>
+<p contenteditable="true"
+   title="Можно редактировать текст прямо здесь">
+    Этот блок доступен для редактирования. Попробуйте изменить текст — браузер позволит вводить и удалять символы. Однако для сохранения изменений нужен серверный обработчик.
+</p>
+
+<p><a href="#faq-end">Перейти в конец списка ↓</a></p>
+
+<blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML">
+    <p>HTML — это язык гипертекстовой разметки документов.</p>
+    <footer>— <cite>MDN Web Docs</cite></footer>
+</blockquote>
+
+<p>
+    <dfn title="Веб-фреймворк">Django</dfn> — высокоуровневый Python-фреймворк.
+</p>
+<p>
+    Аббревиатура <abbr title="Content Management System">CMS</abbr> расшифровывается как система управления контентом.
+</p>
+
+{% for item in faqs %}
+<details>
+    <summary>
+        {{ item.question }}
+        <small>(<time datetime="{{ item.added_at|date:'Y-m-d\TH:i:s' }}">{{ item.added_at|date:"d/m/Y" }}</time>)</small>
+    </summary>
+    <p>{{ item.answer }}</p>
+</details>
+{% empty %}
+<p>Вопросов пока нет.</p>
+{% endfor %}
+
+<h3>Пример листинга кода</h3>
+<pre><code>def hello():
+    print("Привет, мир!")</code></pre>
+<p>Результат: <samp>Привет, мир!</samp></p>
+<p>Введите в консоли: <kbd>python manage.py runserver</kbd></p>
+<p>Переменная <var>x</var> равна 10.</p>
+
+<h3>Стихотворение</h3>
+<p>
+    Я помню чудное мгновенье:<br>
+    Передо мной явилась ты,<br>
+    Как мимолётное виденье,<br>
+    Как гений чистой красоты.
+</p>
+<p>
+    Очень длинное слово для проверки переноса:
+    метоксихлор<wbr>диэтиламино<wbr>метил<wbr>бутил<wbr>амино<wbr>акридин
+</p>
+
+<p id="faq-end"><a href="#">↑ Наверх</a></p>
+{% endblock %}

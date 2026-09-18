@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Промокоды и купоны</h2>
+
+<h3>Действующие</h3>
+<table>
+    <thead>
+        <tr>
+            <th id="p-code">Код</th>
+            <th id="p-disc">Скидка</th>
+            <th id="p-until">Действует до</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in active_promos %}
+        <tr>
+            <td headers="p-code"><code>{{ p.code }}</code></td>
+            <td headers="p-disc"><mark>{{ p.discount_percent }}%</mark></td>
+            <td headers="p-until">
+                <time datetime="{{ p.valid_until|date:'Y-m-d' }}">
+                    {{ p.valid_until|date:"d/m/Y" }}
+                </time>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">Активных промокодов нет.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Архив</h3>
+<table>
+    <thead>
+        <tr>
+            <th id="a-code">Код</th>
+            <th id="a-disc">Скидка</th>
+            <th id="a-status">Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in archived_promos %}
+        <tr>
+            <td headers="a-code"><s>{{ p.code }}</s></td>
+            <td headers="a-disc">{{ p.discount_percent }}%</td>
+            <td headers="a-status">Истёк</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">Архив пуст.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>О компании</h2>
+
+<article>
+    <header>
+        <img src="{{ company.logo.url }}" alt="Логотип {{ company.name }}" width="200">
+        <h3>{{ company.name }}</h3>
+    </header>
+    <p>{{ company.description }}</p>
+</article>
+
+<h3>Видео о нас</h3>
+<video width="640" height="360" controls preload="metadata" poster="https://dummyimage.com/320x176/cc0000/fff&text=Video+About">
+    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    <source src="https://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
+    Ваш браузер не поддерживает видео.
+</video>
+
+<h3>Аудио-приветствие</h3>
+<audio controls>
+    <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+    Ваш браузер не поддерживает аудио.
+</audio>
+
+<h3>История по годам</h3>
+<ol reversed>
+    {% for h in history %}
+        <li><time datetime="{{ h.year }}">{{ h.year }}</time> — {{ h.event }}</li>
+    {% endfor %}
+</ol>
+
+<h3>Реквизиты</h3>
+<pre>{{ company.requisites }}</pre>
+
+<h3>Сертификат</h3>
+<iframe src="https://example.com/certificate.pdf" width="600" height="400"
+        sandbox="allow-same-origin" title="Сертификат компании"></iframe>
+<blockquote>
+    <p>{{ company.certificate_text }}</p>
+</blockquote>
+
+<h3>Карта</h3>
+<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=27.5,53.9,27.6,54.0"
+        width="600" height="400" title="Карта проезда" loading="lazy"></iframe>
+{% endblock %}

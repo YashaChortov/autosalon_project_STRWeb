@@ -83,10 +83,11 @@ STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 
 # Настройки для медиа-файлов
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'content:home'      # куда идти после входа
+LOGOUT_REDIRECT_URL = 'content:home'     # куда идти после выхода
+LOGIN_URL = 'users:login'                 # куда перенаправлять неавторизованных

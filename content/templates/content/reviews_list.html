@@ -1,8 +1,84 @@
-{% extends "base.html" %}
-
-{% block title %}Отзывы - Автосалон{% endblock %}
-
+{% extends 'base.html' %}
 {% block content %}
 <h2>Отзывы</h2>
-<p>Здесь будут отзывы клиентов...</p>
+
+{% if user.is_authenticated %}
+<h3>Оставить отзыв</h3>
+<form method="post" action="{% url 'content:add_review' %}" novalidate>
+    {% csrf_token %}
+    <fieldset>
+        <legend>Ваш отзыв</legend>
+
+        <label>Оценка:</label><br>
+        {% for i in "12345" %}
+            <label>
+                <input type="radio" name="rating" value="{{ i }}"
+                       {% if forloop.first %}required{% endif %}>
+                {{ i }} ★
+            </label>
+        {% endfor %}
+        <br><br>
+
+        <label for="id_content">Текст (необязательно):</label><br>
+        <textarea id="id_content" name="content" rows="5" cols="50"
+                  placeholder="Расскажите о вашем опыте..." maxlength="1000"></textarea>
+        <br><br>
+
+        <!-- Способ 1: <select> -->
+        <label for="id_source">Как вы о нас узнали?</label><br>
+        <select id="id_source" name="source">
+            <option value="search">Поисковик</option>
+            <option value="social">Соцсети</option>
+            <option value="friend">Друзья</option>
+            <option value="ad">Реклама</option>
+            <option value="dealer">Дилер</option>
+            <option value="other" selected>Другое</option>
+        </select>
+        <br><br>
+
+        <!-- Способ 2: <datalist> -->
+        <label for="id_recommend">Порекомендуете друзьям?</label><br>
+        <input type="text"
+               id="id_recommend"
+               name="recommend"
+               list="recommend_options"
+               placeholder="Начните вводить..."
+               autocomplete="off"
+               maxlength="100">
+        <datalist id="recommend_options">
+            <option value="Да, обязательно"></option>
+            <option value="Скорее да"></option>
+            <option value="Возможно"></option>
+            <option value="Скорее нет"></option>
+            <option value="Нет"></option>
+        </datalist>
+        <br><br>
+
+        <button type="submit">Отправить</button>
+        <button type="reset">Очистить</button>
+    </fieldset>
+</form>
+{% else %}
+<p><a href="{% url 'users:login' %}">Войдите</a> или
+   <a href="{% url 'users:signup' %}">зарегистрируйтесь</a>, чтобы оставить отзыв.</p>
+{% endif %}
+
+<hr>
+
+{% for review in reviews %}
+<article>
+    <header>
+        <h3>{{ review.display_name }}</h3>
+        <small>(<time datetime="{{ review.created_at|date:'Y-m-d\TH:i:s' }}">
+            {{ review.created_at|date:"d/m/Y H:i" }}
+        </time>)</small>
+    </header>
+    <p>Оценка: {% for _ in "x"|rjust:review.rating %}★{% endfor %} ({{ review.rating }}/5)</p>
+    {% if review.content %}<p>{{ review.content }}</p>{% endif %}
+    <p><small>Как узнал: {{ review.get_source_display }}</small></p>
+    <p><small>Рекомендует: {{ review.recommend }}</small></p>
+</article>
+{% empty %}
+<p>Пока нет отзывов.</p>
+{% endfor %}
 {% endblock %}

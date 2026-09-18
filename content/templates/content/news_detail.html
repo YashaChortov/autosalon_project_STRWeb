@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }} — Новости АвтоПрестиж{% endblock %}
+
+{% block content %}
+<article class="news-article" itemscope itemtype="http://schema.org/NewsArticle">
+
+    <!-- Заголовок -->
+    <header>
+        <h2 itemprop="headline">{{ article.title }}</h2>
+
+        <p>
+            <small>
+                Опубликовано:
+                <time datetime="{{ article.published_at|date:'Y-m-d\TH:i:s' }}"
+                      itemprop="datePublished">
+                    <mark>{{ article.published_at|date:"d/m/Y H:i" }}</mark>
+                </time>
+            </small>
+        </p>
+    </header>
+
+    <!-- Картинка с подписью -->
+    {% if article.image %}
+    <figure>
+        <img src="{{ article.image.url }}"
+             alt="Иллюстрация к новости «{{ article.title }}»"
+             width="800"
+             loading="lazy"
+             itemprop="image">
+        <figcaption>Иллюстрация к новости</figcaption>
+    </figure>
+    {% endif %}
+
+    <!-- Краткое содержание (одно предложение) -->
+    <p class="news-summary" itemprop="description">
+        <strong>Кратко:</strong> {{ article.summary }}
+    </p>
+
+    <hr>
+
+    <!-- Полный текст статьи в многоколоночном макете -->
+    <div class="news-content" itemprop="articleBody">
+        {{ article.content|linebreaks }}
+    </div>
+
+    <hr>
+
+    <!-- Ссылки в конце статьи -->
+    <footer>
+        <p>
+            <a href="{% url 'content:news_list' %}">← Все новости</a>
+            &nbsp;|&nbsp;
+            <a href="{% url 'content:home' %}">На главную</a>
+        </p>
+    </footer>
+
+</article>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<h2>Корзина</h2>
+
+{% if items %}
+<table border="1">
+    <caption>Содержимое вашей корзины</caption>
+    <thead>
+        <tr>
+            <th id="col-name">Название</th>
+            <th id="col-price">Цена</th>
+            <th id="col-qty">Количество</th>
+            <th id="col-sum">Сумма</th>
+            <th id="col-act">Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td headers="col-name">{{ item.product.name }}</td>
+            <td headers="col-price">{{ item.product.price }} BYN</td>
+            <td headers="col-qty">
+                <form method="post" action="{% url 'main:cart_update' item.product.pk %}" style="display:inline">
+                    {% csrf_token %}
+                    <button name="action" value="dec">−</button>
+                </form>
+                {{ item.qty }}
+                <form method="post" action="{% url 'main:cart_update' item.product.pk %}" style="display:inline">
+                    {% csrf_token %}
+                    <button name="action" value="inc">+</button>
+                </form>
+            </td>
+            <td headers="col-sum">{{ item.subtotal }} BYN</td>
+            <td headers="col-act">
+                <form method="post" action="{% url 'main:cart_remove' item.product.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3"><strong>Итого:</strong></td>
+            <td colspan="2"><strong>{{ total }} BYN</strong></td>
+        </tr>
+    </tfoot>
+</table>
+
+<p>
+    <a href="{% url 'main:checkout' %}">💳 Оплатить</a>
+</p>
+<p><a href="{% url 'main:product_list' %}">← Назад к каталогу</a></p>
+{% else %}
+<p>Корзина пуста.</p>
+<p><a href="{% url 'main:product_list' %}">← Назад к каталогу</a></p>
+{% endif %}
+{% endblock %}

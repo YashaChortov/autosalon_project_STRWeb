@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Новости{% endblock %}
+{% block content %}
+<h2>Новости</h2>
+
+{% if error %}
+  <p style="color:red;">Ошибка: {{ error }}</p>
+{% endif %}
+
+{% for news in news_list %}
+  <div style="border:1px solid #ccc; padding:10px; margin:10px 0;">
+    <h3>{{ news.title }}</h3>
+    <p>{{ news.description }}</p>
+    <a href="{{ news.url }}" target="_blank">Читать полностью</a>
+  </div>
+{% empty %}
+  <p>Новостей нет.</p>
+{% endfor %}
+
+<h3>🐱 Интересный факт о кошках 🐱</h3>
+<p>{{ cat_fact }}</p>
+
+{% endblock %}
+

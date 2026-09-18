@@ -1,51 +1,106 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title><!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <title>{% block title %}Автосалон{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Автосалон АвтоПрестиж — продажа автомобилей и мотоциклов в Минске">
+    <meta name="keywords" content="автосалон, автомобили, BMW, Toyota, Lada, мотоциклы">
+    <meta name="author" content="АвтоПрестиж">
+    <meta name="robots" content="index, follow">
+
+    <title>{% block title %}АвтоПрестиж{% endblock %}</title>
+
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon-32x32.png' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header>
-        <h1><a href="/">Автосалон</a></h1>
-        <nav>
-            <a href="{% url 'content:home' %}">Главная</a> |
-            <a href="{% url 'content:news_list' %}">Новости</a> |
-            <a href="{% url 'content:vacancies_list' %}">Вакансии</a> |
-            <a href="{% url 'content:reviews_list' %}">Отзывы</a> |
-            <a href="{% url 'main:product_list' %}">Товары</a> |
-            <a href="{% url 'main:order_list' %}">Заказы</a> |
-            <a href="{% url 'main:client_list' %}">Клиенты</a> |
-            <a href="{% url 'main:contact_list' %}">Контакты</a> |
-            <a href="{% url 'main:faq_list' %}">FAQ</a> |
-            <a href="{% url 'analytics:sales_report' %}">Аналитика</a> |
-            {% if user.is_authenticated %}
-                Привет, {{ user.username }} |
-                <a href="{% url 'logout' %}">Выйти</a>
-            {% else %}
-                <a href="{% url 'login' %}">Войти</a> |
-                <a href="{% url 'users:signup' %}">Регистрация</a>
-            {% endif %}
+        <h1>АвтоПрестиж</h1>
+        <nav aria-label="Основная навигация">
+            <ul>
+                <li><a href="{% url 'content:home' %}" accesskey="h" title="На главную">Главная</a></li>
+                <li><a href="{% url 'main:product_list' %}">Каталог</a></li>
+                <li><a href="{% url 'content:about' %}">О компании</a></li>
+                <li><a href="{% url 'content:news_list' %}">Новости</a></li>
+                <li><a href="{% url 'content:faq_list' %}">Словарь</a></li>
+                <li><a href="{% url 'main:contact_list' %}">Контакты</a></li>
+                <li><a href="{% url 'content:vacancies_list' %}">Вакансии</a></li>
+                <li><a href="{% url 'content:reviews_list' %}">Отзывы</a></li>
+                <li><a href="{% url 'content:promocodes' %}">Промокоды</a></li>
+                <li><a href="{% url 'content:privacy' %}">Политика</a></li>
+
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'main:cart' %}" title="Корзина">🛒 Корзина</a></li>
+                    <li><a href="{% url 'main:my_orders' %}">Мои заказы</a></li>
+                    <li>Привет, <strong>{{ user.username }}</strong>!</li>
+                    <li>
+                        <form method="post" action="{% url 'users:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit">
+                                Выйти
+                            </button>
+                        </form>
+                    </li>
+                                    {% else %}
+                    <li><a href="{% url 'users:login' %}">Войти</a></li>
+                    <li><a href="{% url 'users:signup' %}">Регистрация</a></li>
+                {% endif %}
+
+                {% if user.is_employee or user.is_superuser %}
+                    <li><a href="{% url 'main:order_list' %}">Заказы</a></li>
+                    <li><a href="{% url 'main:client_list' %}">Клиенты</a></li>
+                    <li><a href="{% url 'analytics:sales_report' %}">Аналитика</a></li>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <li><a href="/admin/" target="_blank">Админка</a></li>
+                {% endif %}
+            </ul>
         </nav>
     </header>
-    <hr>
+
+    {% if messages %}
+        <aside aria-label="Сообщения">
+            {% for message in messages %}
+                <p class="msg-{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </aside>
+    {% endif %}
+
+    <aside>
+        <h2>Разделы сайта</h2>
+        <nav>
+            <ul>
+                <li><a href="{% url 'content:home' %}">Главная</a></li>
+                <li><a href="{% url 'main:product_list' %}">Каталог</a></li>
+                <li><a href="{% url 'content:about' %}">О компании</a></li>
+                <li><a href="{% url 'content:news_list' %}">Новости</a></li>
+                <li><a href="{% url 'content:faq_list' %}">Словарь</a></li>
+                <li><a href="{% url 'main:contact_list' %}">Контакты</a></li>
+                <li><a href="{% url 'content:vacancies_list' %}">Вакансии</a></li>
+                <li><a href="{% url 'content:reviews_list' %}">Отзывы</a></li>
+                <li><a href="{% url 'content:promocodes' %}">Промокоды</a></li>
+                <li><a href="{% url 'content:privacy' %}">Политика</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main>
         {% block content %}{% endblock %}
     </main>
-    <hr>
-    <footer>
-        <p>&copy; 2025 Автосалон</p>
-    </footer>
-</body>
-</html>
-</title>
-</head>
-<body>
 
+    <footer>
+        <p>
+            <small>&copy; {% now "Y" %} АвтоПрестиж. Все права защищены.</small>
+        </p>
+        <address>
+            г. Минск, ул. Примерная, 1<br>
+            Телефон: <a href="tel:+375291234567">+375 (29) 123-45-67</a><br>
+            Email: <a href="mailto:info@autoprestige.by?subject=Вопрос">info@autoprestige.by</a>
+        </address>
+        <p>
+            <a href="{% url 'content:privacy' %}">Политика конфиденциальности</a>
+        </p>
+    </footer>
 </body>
 </html>

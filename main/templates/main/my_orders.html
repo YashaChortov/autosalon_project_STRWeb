@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Мои заказы</h2>
+
+{% for order in orders %}
+    <div class="order">
+        <p><strong>Заказ #{{ order.pk }}</strong> — {{ order.product.name }}</p>
+        <p>Количество: {{ order.quantity }}</p>
+        <p>Статус: {{ order.get_status_display }}</p>
+        <p>Дата: {{ order.order_date|date:"d/m/Y H:i" }}</p>
+    </div>
+{% empty %}
+    <p>У вас пока нет заказов.</p>
+{% endfor %}
+{% endblock %}

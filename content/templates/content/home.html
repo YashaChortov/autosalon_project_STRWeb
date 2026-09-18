@@ -1,11 +1,113 @@
-{% extends "base.html" %}
-{% block title %}Главная{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная — АвтоПрестиж{% endblock %}
+
 {% block content %}
-<h2>Добро пожаловать в Автосалон</h2>
-<p>Здесь вы найдете новости, вакансии и отзывы клиентов.</p>
-<ul>
-  <li><a href="{% url 'content:news_list' %}">Новости</a></li>
-  <li><a href="{% url 'content:vacancies_list' %}">Вакансии</a></li>
-  <li><a href="{% url 'content:reviews_list' %}">Отзывы</a></li>
-</ul>
+<article>
+    <h2>Добро пожаловать в АвтоПрестиж</h2>
+    <p>Мы продаём <strong>автомобили</strong> и <em>мотоциклы</em> с <mark>1998 года</mark>.</p>
+</article>
+
+<!-- Рекламные баннеры с адаптивностью -->
+<section>
+    <h2>Акции</h2>
+
+    {% if banners|length >= 2 %}
+        <article>
+            <h3>{{ banners.0.title }} / {{ banners.1.title }}</h3>
+
+            <picture>
+                <!-- Узкий экран (телефон): баннер 2 -->
+                <source media="(max-width: 600px)"
+                        srcset="{{ banners.1.image.url }}">
+
+                <!-- Средний экран (планшет): баннер 3, если есть, иначе баннер 1 -->
+                {% if banners|length >= 3 %}
+                    <source media="(max-width: 1200px)"
+                            srcset="{{ banners.2.image.url }}">
+                {% endif %}
+
+                <!-- Широкий экран (десктоп): баннер 1 -->
+                <img src="{{ banners.0.image.url }}"
+                     alt="{{ banners.0.title }}"
+                     loading="lazy">
+            </picture>
+
+            <p>{{ banners.0.title }}</p>
+        </article>
+    {% elif banners %}
+        <!-- Один баннер: обычный вывод без адаптива -->
+        {% for banner in banners %}
+            <article>
+                <h3>{{ banner.title }}</h3>
+                {% if banner.image %}
+                    <img src="{{ banner.image.url }}" alt="{{ banner.title }}" loading="lazy">
+                {% endif %}
+                {% if banner.link %}
+                    <p><a href="{{ banner.link }}" target="_blank" rel="noopener">Подробнее →</a></p>
+                {% endif %}
+            </article>
+        {% endfor %}
+    {% else %}
+        <p>Акций пока нет.</p>
+    {% endif %}
+</section>
+
+<!-- Каталог -->
+<section>
+    <h2>Каталог товаров</h2>
+    <ul>
+        {% for product in products %}
+            <li>
+                <a href="{% url 'main:product_detail' product.pk %}">
+                    <strong>{{ product.name }}</strong>
+                </a>
+                — {{ product.price }} BYN
+            </li>
+        {% empty %}
+            <li>Товаров пока нет.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'main:product_list' %}">Смотреть весь каталог →</a></p>
+</section>
+
+<!-- Последняя статья -->
+{% if latest_article %}
+<section>
+    <h2>Последняя новость</h2>
+    <article>
+        <h3>{{ latest_article.title }}</h3>
+        <p>{{ latest_article.summary }}</p>
+        <p>
+            <time datetime="{{ latest_article.published_at|date:'Y-m-d\TH:i:s' }}">
+                {{ latest_article.published_at|date:"d/m/Y H:i" }}
+            </time>
+        </p>
+        <a href="{% url 'content:news_detail' latest_article.pk %}">Читать далее</a>
+    </article>
+</section>
+{% endif %}
+
+<!-- Партнёры -->
+<section>
+    <h2>Наши партнёры</h2>
+    <ul>
+        {% for partner in partners %}
+            <li>
+                <a href="{{ partner.site_url }}" target="_blank" rel="noopener">
+                    {% if partner.logo %}
+                        <img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}">
+                    {% else %}
+                        <img src="https://dummyimage.com/120x60/0066cc/fff&text={{ partner.name }}"
+                             alt="Логотип {{ partner.name }}">
+                    {% endif %}
+                    <span>{{ partner.name }}</span>
+                </a>
+            </li>
+        {% empty %}
+            <li>Партнёров пока нет.</li>
+        {% endfor %}
+    </ul>
+</section>
 {% endblock %}

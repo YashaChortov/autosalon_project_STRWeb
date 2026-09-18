@@ -4,5 +4,16 @@
 
 {% block content %}
 <h2>Вакансии</h2>
-<p>Здесь будут вакансии компании...</p>
+
+    {% for vacancy in vacancies %}
+        <div class="vacancy">
+            <h3>{{ vacancy.title }}</h3>
+            <p>{{ vacancy.description }}</p>
+            <small>Опубликовано: {{ vacancy.published_at|date:"d/m/Y" }}</small>
+        </div>
+    {% empty %}
+        <p>Пока нет вакансий.</p>
+    {% endfor %}
+
 {% endblock %}
+

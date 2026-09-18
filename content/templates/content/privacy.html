@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Политика конфиденциальности{% endblock %}
+
+{% block content %}
+<article>
+    <h2>{{ policy.title|default:"Политика конфиденциальности" }}</h2>
+
+    {% if policy %}
+        <p><small>Обновлено:
+            <time datetime="{{ policy.updated_at|date:'Y-m-d\TH:i:s' }}">
+                {{ policy.updated_at|date:"d/m/Y" }}
+            </time>
+        </small></p>
+        <div>{{ policy.text|linebreaks }}</div>
+    {% else %}
+        <p>Текст политики пока не заполнен. Добавьте его через
+           <a href="/admin/">админ-панель</a>.</p>
+    {% endif %}
+</article>
+{% endblock %}

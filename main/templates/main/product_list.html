@@ -1,23 +1,33 @@
-{% extends "base.html" %}
-{% block title %}Список товаров{% endblock %}
+{% extends 'base.html' %}
+
 {% block content %}
 <h2>Список товаров</h2>
-<table border="1" cellpadding="5">
-  <tr>
-    <th>Название</th>
-    <th>Цена</th>
-    <th>Производитель</th>
-    <th>Тип товара</th>
-  </tr>
-  {% for product in products %}
-  <tr>
-    <td>{{ product.name }}</td>
-    <td>{{ product.price }} BYN</td>
-    <td>{{ product.manufacturer.name }}</td>
-    <td>{{ product.product_type.name }}</td>
-  </tr>
-  {% empty %}
-  <tr><td colspan="4">Товаров нет</td></tr>
-  {% endfor %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Цена</th>
+            <th>Производитель</th>
+            <th>Тип товара</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+            <tr data-product-id="{{ product.pk }}"
+                data-product-name="{{ product.name }}"
+                data-product-price="{{ product.price }}"
+                data-product-type="{{ product.product_type.name }}">
+                <td>
+                    <a href="{% url 'main:product_detail' product.pk %}">{{ product.name }}</a>
+                </td>
+                <td>{{ product.price }} BYN</td>
+                <td>{{ product.manufacturer.name }}</td>
+                <td>{{ product.product_type.name }}</td>
+            </tr>
+        {% empty %}
+        <tr><td colspan="4">Товаров пока нет.</td></tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %}

@@ -1,18 +1,49 @@
-{% extends "base.html" %}
-{% block title %}Контакты{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Контакты — АвтоПрестиж{% endblock %}
+
 {% block content %}
-<h2>Контакты</h2>
-<ul>
-  {% for contact in contacts %}
-  <li>
-    <img src="{{ contact.photo.url }}" alt="{{ contact.name }}" width="100" />
-    <h3>{{ contact.name }}</h3>
-    <p>{{ contact.job_description }}</p>
-    <p>Телефон: {{ contact.phone }}</p>
-    <p>Email: <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
-  </li>
-  {% empty %}
-  <li>Контактов нет.</li>
-  {% endfor %}
-</ul>
+<h2>Наши сотрудники</h2>
+
+<table>
+    <caption>Контактные данные сотрудников</caption>
+    <thead>
+        <tr>
+            <th id="h-photo">Фото</th>
+            <th id="h-name">ФИО</th>
+            <th id="h-pos">Должность</th>
+            <th id="h-phone">Телефон</th>
+            <th id="h-mail">Email</th>
+            <th id="h-desc">Описание работ</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contact in contacts %}
+        <tr>
+            <td headers="h-photo">
+                {% if contact.photo %}
+                    <img src="{{ contact.photo.url }}"
+                         alt="Фото {{ contact.employee.full_name }}"
+                         width="150" height="150" loading="lazy">
+                {% else %}
+                    Нет фото
+                {% endif %}
+            </td>
+            <td headers="h-name">{{ contact.employee.full_name }}</td>
+            <td headers="h-pos">{{ contact.employee.position }}</td>
+            <td headers="h-phone">
+                <a href="tel:{{ contact.employee.phone|cut:' '|cut:'('|cut:')'|cut:'-' }}">{{ contact.employee.phone }}</a>
+            </td>
+            <td headers="h-mail">
+                <a href="mailto:{{ contact.employee.email }}">{{ contact.employee.email }}</a>
+            </td>
+            <td headers="h-desc">{{ contact.description|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">Контакты пока не заполнены.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

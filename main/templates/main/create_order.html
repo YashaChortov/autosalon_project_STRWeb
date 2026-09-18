@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Оформление заказа</h2>
+<p><strong>Товар:</strong> {{ product.name }}</p>
+<p><strong>Цена за единицу:</strong> {{ product.price }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <label for="quantity">Количество:</label>
+    <input type="number" name="quantity" id="quantity" value="1" min="1" required>
+    <button type="submit" class="btn btn-primary">Оформить заказ</button>
+</form>
+
+<a href="{% url 'main:product_detail' product.pk %}">← Назад к товару</a>
+{% endblock %}

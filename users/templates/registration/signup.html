@@ -1,10 +1,88 @@
-{% extends "base.html" %}
-{% block title %}Регистрация{% endblock %}
+{% extends 'base.html' %}
+
 {% block content %}
 <h2>Регистрация</h2>
+
 <form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Зарегистрироваться</button>
+    {% csrf_token %}
+
+    <p>
+        <label for="{{ form.username.id_for_label }}">Имя пользователя:</label>
+        {{ form.username }}
+        {% if form.username.errors %}<span class="error">{{ form.username.errors }}</span>{% endif %}
+    </p>
+
+    <p>
+        <label for="{{ form.email.id_for_label }}">Email:</label>
+        {{ form.email }}
+        {% if form.email.errors %}<span class="error">{{ form.email.errors }}</span>{% endif %}
+    </p>
+
+    <p>
+        <label for="{{ form.first_name.id_for_label }}">Имя:</label>
+        {{ form.first_name }}
+    </p>
+
+    <p>
+        <label for="{{ form.last_name.id_for_label }}">Фамилия:</label>
+        {{ form.last_name }}
+    </p>
+
+    <p>
+        <label for="{{ form.phone.id_for_label }}">Телефон:</label>
+        {{ form.phone }}
+        {% if form.phone.errors %}<span class="error">{{ form.phone.errors }}</span>{% endif %}
+    </p>
+
+    <p>
+        <label for="{{ form.city.id_for_label }}">Город:</label>
+        {{ form.city }}
+    </p>
+
+    <p>
+        <label for="{{ form.birth_date.id_for_label }}">Дата рождения:</label>
+        {{ form.birth_date }}
+    </p>
+
+    <div>
+        <label for="{{ form.password1.id_for_label }}">Пароль:</label>
+        {{ form.password1 }}
+        {% if form.password1.help_text %}
+            <div>{{ form.password1.help_text|safe }}</div>
+        {% endif %}
+        {% if form.password1.errors %}<span class="error">{{ form.password1.errors }}</span>{% endif %}
+    </div>
+
+    <p>
+        <label for="{{ form.password2.id_for_label }}">Подтверждение пароля:</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}<span class="error">{{ form.password2.errors }}</span>{% endif %}
+    </p>
+
+    <button type="submit">Зарегистрироваться</button>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const phoneInput = document.querySelector('#id_phone');
+    if (!phoneInput) return;
+
+    phoneInput.addEventListener('input', function (e) {
+        let digits = e.target.value.replace(/\D/g, '');
+        if (digits.startsWith('375')) digits = digits.slice(3);
+        digits = digits.slice(0, 9);
+
+        let result = '+375';
+        if (digits.length > 0) result += ' (' + digits.slice(0, 2);
+        if (digits.length >= 2) result += ')';
+        if (digits.length > 2) result += ' ' + digits.slice(2, 5);
+        if (digits.length > 5) result += '-' + digits.slice(5, 7);
+        if (digits.length > 7) result += '-' + digits.slice(7, 9);
+
+        e.target.value = result;
+    });
+
+    if (phoneInput.value) phoneInput.dispatchEvent(new Event('input'));
+});
+</script>
 {% endblock %}
